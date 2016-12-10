@@ -7,10 +7,9 @@ An Operating System written in rust. Inspired by http://os.phil-opp.com/
 - binutils
 - grub
 - qemu
+- xorriso
 
 ## build steps
-nasm -f elf64 multiboot_header.asm
-nasm -f elf64 boot.asm
-ld -n -o bin/isofiles/kernel.bin -T src/linker.ld src/multiboot_header.o src/boot.o
-grub-mkrescue -o os.iso bin/isofiles
+make run
+
 
