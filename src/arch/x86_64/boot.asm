@@ -1,6 +1,7 @@
 global start
+extern long_mode_start
 
-section .text
+section .next
 bits 32
 start:
     ; setup the stack pointer 
@@ -147,16 +148,6 @@ enable_paging:
 
   ret
 
-section .rodata
-gdt64:
-   dq 0				; zero entry
-.code: equ $ - gdt64
-   dq (1<<44) | (1<<47) | (1<<41) | (1<<43) | (1<<53) ; code segment
-.data: equ $ - gdt64
-   dq (1<<44) | (1<<47) | (1<<41) ; data segment
-.pointer:
-   dw $ - gdt64 - 1
-   dq gdt64
 
 ; Reserve bytes for page tables and stack
 section .bss
@@ -170,3 +161,15 @@ p2_table:
 stack_bottom:
    resb 64
 stack_top:
+
+
+section .rodata
+gdt64:
+   dq 0				; zero entry
+.code: equ $ - gdt64
+   dq (1<<44) | (1<<47) | (1<<41) | (1<<43) | (1<<53) ; code segment
+.data: equ $ - gdt64
+   dq (1<<44) | (1<<47) | (1<<41) ; data segment
+.pointer:
+   dw $ - gdt64 - 1
+   dq gdt64
