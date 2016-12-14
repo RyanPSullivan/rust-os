@@ -5,3 +5,12 @@ authors = ["Ryan Sullivan"]
 
 [lib]
 crate-type = ["staticlib"]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
+rlibc="0.1.4"
