@@ -43,9 +43,11 @@ struct ScreenChar
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
 
+use volatile::Volatile;
+
 struct Buffer
 {
-  chars: [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT],
+  chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
 use core::ptr::Unique;
@@ -75,11 +77,11 @@ impl Writer
         let col = self.column_position;
 
         let color_code = self.color_code;
-        self.buffer().chars[row][col] = ScreenChar
+        self.buffer().chars[row][col].write( ScreenChar
         {
           ascii_character: byte,
           color_code: color_code,
-        };
+        });
 
         self.column_position += 1;
       }
@@ -89,6 +91,14 @@ impl Writer
   fn buffer(&mut self) -> &mut Buffer
   {
     unsafe{ self.buffer.get_mut() }
+  }
+
+  pub fn write_str(&mut self, s: &str)
+  {
+    for byte in s.bytes()
+    {
+      self.write_byte(byte)
+    }
   }
 
   fn new_line(&mut self) { /*  TODO */ }
@@ -102,5 +112,5 @@ pub fn print_something() {
         buffer: unsafe { Unique::new(0xb8000 as *mut _) },
     };
 
-    writer.write_byte(b'H');
+    writer.write_str("Hello world");
 }

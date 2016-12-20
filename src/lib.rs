@@ -5,6 +5,7 @@
 
 mod vga_buffer;
 
+extern crate volatile; 
 extern crate rlibc;
 
 #[no_mangle]
