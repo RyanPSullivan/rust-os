@@ -1,3 +1,5 @@
+use core::fmt;
+
 #[allow(dead_code)]
 #[repr(u8)]
 #[derive(Debug, Clone, Copy)]
@@ -93,17 +95,23 @@ impl Writer
     unsafe{ self.buffer.get_mut() }
   }
 
-  pub fn write_str(&mut self, s: &str)
+
+  fn new_line(&mut self) { /*  TODO */ }
+}
+
+impl fmt::Write for Writer
+{
+  fn write_str(&mut self, s: &str) -> fmt::Result
   {
     for byte in s.bytes()
     {
       self.write_byte(byte)
     }
+    Ok(())
   }
-
-  fn new_line(&mut self) { /*  TODO */ }
 }
 
+use core::fmt::Write;
 
 pub fn print_something() {
     let mut writer = Writer {
@@ -113,4 +121,5 @@ pub fn print_something() {
     };
 
     writer.write_str("Hello world");
+    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0);
 }
